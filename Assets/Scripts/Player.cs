@@ -4,46 +4,91 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] Transform characterBody;
-    [SerializeField] Transform cameraArm;
-    [SerializeField] float playerSpeed;
+    float hAxis; // 키보드
+    float vAxis; // 키보드
+    float xAxis; // 마우스
+    float yAxis; // 마우스
 
+    bool jDown; // 점프
+    bool isJump; // 점프 판별
+
+    [SerializeField] float playerSpeed; // 플레이어 이동 속도
+    [SerializeField] float playerJumpPower; // 플레이어 점프 파워
+
+    Rigidbody rigid;
     Animator animator;
 
+    [SerializeField] Transform characterBody;
+    [SerializeField] Transform cameraArm;
 
-    void Start()
+    void Awake()
     {
+        rigid = GetComponent<Rigidbody>();
         animator = characterBody.GetComponent<Animator>();
     }
 
     void Update()
     {
-        LookAround();
+        getInput();
         Move();
+        Jump();
+        CameraLookAround();
+    }
+
+    // Input 기능
+    void getInput()
+    {
+        hAxis = Input.GetAxis("Horizontal");
+        vAxis = Input.GetAxis("Vertical");
+        xAxis = Input.GetAxis("Mouse X");
+        yAxis = Input.GetAxis("Mouse Y");
+
+        jDown = Input.GetButtonDown("Jump");
     }
 
     // 캐릭터 이동
     void Move()
     {
-        Vector2 moveInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        Vector2 moveInput = new Vector2(hAxis, vAxis);
         bool isMove = moveInput.magnitude != 0;
         animator.SetBool("isMove", isMove);
         if (isMove)
         {
             Vector3 lookForward = new Vector3(cameraArm.forward.x, 0f, cameraArm.forward.z).normalized;
-            Vector3 lookRight = new Vector3(cameraArm.right.x, 0f, cameraArm.right.z).normalized;
+            Vector3 lookRight = new Vector3(cameraArm.right.x, cameraArm.right.y, cameraArm.right.z).normalized;
             Vector3 moveDir = lookForward * moveInput.y + lookRight * moveInput.x;
 
-            characterBody.forward = moveDir;
-            transform.position += moveDir * Time.deltaTime * playerSpeed;
+            if (moveInput.magnitude != 0f)
+            {
+                characterBody.forward = moveDir;
+            }
+            transform.position += Vector3.ClampMagnitude(moveDir, 1f) * Time.deltaTime * 5f;
         }
     }
 
+    // 캐릭터 점프
+    void Jump()
+    {
+        if (jDown && !isJump)
+        {
+            rigid.AddForce(Vector3.up * playerJumpPower, ForceMode.Impulse);
+            animator.SetTrigger("doJump");
+            isJump = true;
+        }
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Floor")
+        {
+            isJump = false;
+        }
+    }
 
     // 카메라 회전
-    void LookAround()
+    void CameraLookAround()
     {
-        Vector2 mouseDelta = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+        Vector2 mouseDelta = new Vector2(xAxis, yAxis);
         Vector3 camAngle = cameraArm.rotation.eulerAngles;
         float x = camAngle.x - mouseDelta.y;
 
