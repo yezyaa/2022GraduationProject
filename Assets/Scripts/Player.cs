@@ -9,14 +9,18 @@ public class Player : MonoBehaviour
     float xAxis; // 마우스
     float yAxis; // 마우스
 
-    bool jDown; // 점프
+    bool jDown; // 점프 키
+    bool fDown; // 공격 키
+
     bool isJump; // 점프 판별
+    bool isFireReady = true; // 공격 준비
 
     [SerializeField] float playerSpeed; // 플레이어 이동 속도
     [SerializeField] float playerJumpPower; // 플레이어 점프 파워
 
     Rigidbody rigid;
     Animator animator;
+    Weapon weapon;
 
     [SerializeField] Transform characterBody;
     [SerializeField] Transform cameraArm;
@@ -25,6 +29,7 @@ public class Player : MonoBehaviour
     {
         rigid = GetComponent<Rigidbody>();
         animator = characterBody.GetComponent<Animator>();
+        weapon = GetComponentInChildren<Weapon>();
     }
 
     void Update()
@@ -32,7 +37,13 @@ public class Player : MonoBehaviour
         getInput();
         Move();
         Jump();
+        Attack();
         CameraLookAround();
+    }
+
+    void FixedUpdate()
+    {
+        FreezeRotation();
     }
 
     // Input 기능
@@ -44,9 +55,10 @@ public class Player : MonoBehaviour
         yAxis = Input.GetAxis("Mouse Y");
 
         jDown = Input.GetButtonDown("Jump");
+        fDown = Input.GetButtonDown("Fire1");
     }
 
-    // 캐릭터 이동
+    // 플레이어 이동
     void Move()
     {
         Vector2 moveInput = new Vector2(hAxis, vAxis);
@@ -64,9 +76,13 @@ public class Player : MonoBehaviour
             }
             transform.position += Vector3.ClampMagnitude(moveDir, 1f) * Time.deltaTime * 5f;
         }
+        if (!isFireReady)
+        {
+            moveInput = Vector2.zero;
+        }
     }
 
-    // 캐릭터 점프
+    // 플레이어 점프
     void Jump()
     {
         if (jDown && !isJump)
@@ -77,11 +93,14 @@ public class Player : MonoBehaviour
         }
     }
 
-    void OnCollisionEnter(Collision collision)
+    // 플레이어 공격
+    void Attack()
     {
-        if (collision.gameObject.tag == "Floor")
+        if (fDown && isFireReady)
         {
-            isJump = false;
+            weapon.Use();
+            animator.SetTrigger("doAttack");
+            Destroy(weapon.intantBullet, 2f); // 2초 뒤 삭제
         }
     }
 
@@ -102,5 +121,22 @@ public class Player : MonoBehaviour
         }
 
         cameraArm.rotation = Quaternion.Euler(x, camAngle.y + mouseDelta.x, camAngle.z);
+    }
+
+    void FreezeRotation()
+    {
+        rigid.angularVelocity = Vector3.zero; // 충돌 시 회전 안하게 막는 기능
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Floor")
+        {
+            isJump = false;
+        }
+        else if (collision.gameObject.tag == "Enemy")
+        {
+
+        }
     }
 }

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5034444726955962877}
   - component: {fileID: 3573199183569503583}
   - component: {fileID: -1035656311168101414}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bullet
   m_TagString: Bullet
   m_Icon: {fileID: 0}
@@ -84,7 +84,7 @@ TrailRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.23075867
+        value: 0.53204346
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -92,7 +92,7 @@ TrailRenderer:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.8040161
+        time: 1
         value: 0
         inSlope: 0
         outSlope: 0
@@ -105,16 +105,16 @@ TrailRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 1, g: 0.48584908, b: 0.8245767, a: 1}
-      key1: {r: 0.6367924, g: 1, b: 0.8111085, a: 0.19607843}
-      key2: {r: 0.6367924, g: 0.9245633, b: 1, a: 0}
+      key0: {r: 1, g: 0.3915094, b: 0.72788745, a: 1}
+      key1: {r: 0.28595585, g: 0.9622642, b: 0.51319385, a: 0.39215687}
+      key2: {r: 0.3443396, g: 0.866048, b: 1, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
       key5: {r: 0, g: 0, b: 0, a: 0}
       key6: {r: 0, g: 0, b: 0, a: 0}
       key7: {r: 0, g: 0, b: 0, a: 0}
       ctime0: 0
-      ctime1: 34888
+      ctime1: 42405
       ctime2: 65535
       ctime3: 0
       ctime4: 0
@@ -182,4 +182,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c12295d073a181d44b6dcdb5184ea58c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletDamage: 15
+  damage: 20

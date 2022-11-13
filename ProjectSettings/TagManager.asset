@@ -14,12 +14,12 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Floor
+  - Player
+  - Bullet
+  - Bullet Shell
+  - Enemy
+  - Enemy Dead
   - 
   - 
   - 
