@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -26,7 +25,6 @@ public class Player : MonoBehaviour
     Rigidbody rigid;
     Animator animator;
     Weapon weapon;
-    public Slider playerHpBar;
     Enemy enemy;
 
     void Awake()
