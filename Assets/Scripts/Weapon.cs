@@ -12,7 +12,7 @@ public class Weapon : MonoBehaviour
     public GameObject bulletShell; // 탄피 프리팹을 저장할 변수
     public GameObject intantBullet;
 
-    public void Use()
+    public void WeaponUse()
     {
         StopCoroutine("Shot");
         StartCoroutine("Shot");

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -14,22 +15,26 @@ public class Player : MonoBehaviour
 
     bool isJump; // 점프 판별
     bool isFireReady = true; // 공격 준비
+    bool isDamage;
 
     [SerializeField] float playerSpeed; // 플레이어 이동 속도
     [SerializeField] float playerJumpPower; // 플레이어 점프 파워
-
-    Rigidbody rigid;
-    Animator animator;
-    Weapon weapon;
+    public float playerHp;
 
     [SerializeField] Transform characterBody;
     [SerializeField] Transform cameraArm;
+    Rigidbody rigid;
+    Animator animator;
+    Weapon weapon;
+    public Slider playerHpBar;
+    Enemy enemy;
 
     void Awake()
     {
         rigid = GetComponent<Rigidbody>();
         animator = characterBody.GetComponent<Animator>();
         weapon = GetComponentInChildren<Weapon>();
+        enemy = GameObject.FindWithTag("Enemy").GetComponent<Enemy>();
     }
 
     void Update()
@@ -98,7 +103,7 @@ public class Player : MonoBehaviour
     {
         if (fDown && isFireReady)
         {
-            weapon.Use();
+            weapon.WeaponUse();
             animator.SetTrigger("doAttack");
             Destroy(weapon.intantBullet, 2f); // 2초 뒤 삭제
         }
@@ -123,9 +128,10 @@ public class Player : MonoBehaviour
         cameraArm.rotation = Quaternion.Euler(x, camAngle.y + mouseDelta.x, camAngle.z);
     }
 
+    // 충돌 시 회전 안하게 막는 기능
     void FreezeRotation()
     {
-        rigid.angularVelocity = Vector3.zero; // 충돌 시 회전 안하게 막는 기능
+        rigid.angularVelocity = Vector3.zero;
     }
 
     void OnCollisionEnter(Collision collision)
@@ -134,9 +140,31 @@ public class Player : MonoBehaviour
         {
             isJump = false;
         }
-        else if (collision.gameObject.tag == "Enemy")
+        if (collision.gameObject.tag == "Enemy" && enemy.GetAnimator().GetBool("isAttack"))
         {
+            if (!isDamage)
+            {
+                Enemy enemy = collision.gameObject.GetComponent<Enemy>();
+                playerHp -= enemy.enemyDamage;
+                animator.SetTrigger("doGetHit");
 
+                StartCoroutine(onDamage());
+
+                Debug.Log("플레이어 체력 : " + playerHp);
+            }
         }
+    }
+
+    IEnumerator onDamage()
+    {
+        isDamage = true;
+
+        Vector3 reactVec = transform.position - gameObject.transform.position;
+        reactVec = reactVec.normalized;
+        reactVec += Vector3.up;
+        rigid.AddForce(reactVec * 2, ForceMode.Impulse);
+        yield return new WaitForSeconds(1f); // 1초 무적
+
+        isDamage = false;
     }
 }

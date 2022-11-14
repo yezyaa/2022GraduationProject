@@ -5,18 +5,19 @@ using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
-    public int curHp;
+    public float enemyHp;
+    public float enemyDamage;
     public enum CurrentState { idle, trace, attack, dead };
     public CurrentState curState = CurrentState.idle;
     
     public float traceDist; // 추적 사정거리
     public float attackDist; // 공격 사정거리
 
-    bool isDead = false;
+    bool isDead = false; // 사망여부
 
     Rigidbody rigid;
     SphereCollider sphereCollider;
-    Animator animator;
+    public Animator animator;
     Transform playerTransform;
     NavMeshAgent nvAgent;
 
@@ -31,6 +32,7 @@ public class Enemy : MonoBehaviour
 
     void Start()
     {
+        nvAgent.destination = playerTransform.position; // 추적 대상의 위치를 설정하면 바로 추적 시작
         StartCoroutine(CheckState());
         StartCoroutine(CheckStateForAction());
     }
@@ -39,6 +41,7 @@ public class Enemy : MonoBehaviour
     {
         Debug.DrawRay(transform.position, transform.forward * traceDist, Color.green);
         Debug.DrawRay(transform.position, transform.forward * attackDist, Color.red);
+        FreezeRotation();
     }
 
     IEnumerator CheckState()
@@ -52,15 +55,19 @@ public class Enemy : MonoBehaviour
             if (dist <= attackDist)
             {
                 curState = CurrentState.attack;
-                animator.SetTrigger("doAttack");
+                animator.SetBool("isAttack", true);
             }
             else if (dist <= traceDist)
             {
                 curState = CurrentState.trace;
+                animator.SetBool("isWalk", true);
+                animator.SetBool("isAttack", false);
             }
             else
             {
                 curState = CurrentState.idle;
+                animator.SetBool("isWalk", false);
+                animator.SetBool("isAttack", false);
             }
         }
     }
@@ -72,11 +79,11 @@ public class Enemy : MonoBehaviour
             switch (curState)
             {
                 case CurrentState.idle:
-                    nvAgent.Stop();
+                    nvAgent.isStopped = true;
                     break;
                 case CurrentState.trace:
                     nvAgent.destination = playerTransform.position;
-                    nvAgent.Resume();
+                    nvAgent.isStopped = false;
                     break;
                 case CurrentState.attack:
                     break;
@@ -86,19 +93,30 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    void FreezeRotation()
+    {
+        rigid.angularVelocity = Vector3.zero; // 충돌 시 회전 안하게 막는 기능
+    }
+
+    public Animator GetAnimator()
+    {
+        return animator;
+    }
+
     void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Bullet")
         {
             Bullet bullet = other.GetComponent<Bullet>();
             animator.SetTrigger("doGetHit");
-            curHp -= bullet.damage;
+            enemyHp -= bullet.bulletDamage;
+            Debug.Log("몬스터 체력 : " + enemyHp);
             Destroy(other.gameObject);
 
-            if (curHp <= 0)
+            if (enemyHp <= 0)
             {
                 animator.SetTrigger("doDie");
-                Destroy(gameObject, 2);
+                Destroy(gameObject, 3);
                 gameObject.layer = 11;
             }
         }
