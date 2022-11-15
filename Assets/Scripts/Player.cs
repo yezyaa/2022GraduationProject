@@ -26,6 +26,7 @@ public class Player : MonoBehaviour
     Animator animator;
     Weapon weapon;
     Enemy enemy;
+    EnemyAlien enemyAlien;
 
     void Awake()
     {
@@ -33,6 +34,7 @@ public class Player : MonoBehaviour
         animator = characterBody.GetComponent<Animator>();
         weapon = GetComponentInChildren<Weapon>();
         enemy = GameObject.FindWithTag("Enemy").GetComponent<Enemy>();
+        enemyAlien = GetComponent<EnemyAlien>();
     }
 
     void Update()
@@ -138,7 +140,7 @@ public class Player : MonoBehaviour
         {
             isJump = false;
         }
-        if (collision.gameObject.tag == "Enemy" && enemy.GetAnimator().GetBool("isAttack"))
+        if (collision.gameObject.tag == "Enemy") // && enemy.GetAnimator().GetBool("isAttack")
         {
             if (!isDamage)
             {
@@ -148,7 +150,22 @@ public class Player : MonoBehaviour
 
                 StartCoroutine(onDamage());
 
-                Debug.Log("플레이어 체력 : " + playerHp);
+                //Debug.Log("플레이어 체력 : " + playerHp);
+            }
+        }
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Enemy")
+        {
+            if (!isDamage)
+            {
+                EnemyAlien enemyAlien = other.GetComponent<EnemyAlien>();
+                playerHp -= enemyAlien.enemyDamage;
+                animator.SetTrigger("doGetHitAlien");
+
+                StartCoroutine(onDamage());
             }
         }
     }

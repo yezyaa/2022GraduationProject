@@ -16637,11 +16637,4 @@ AnimationClip:
   m_EulerEditorCurves: []
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 1
-  m_Events:
-  - time: 0.06666667
-    functionName: OnEventFx
-    data: 
-    objectReferenceParameter: {fileID: 36251271191949005, guid: 7c90f07c775df1d4eb87a7d7024f40d8, type: 3}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
+  m_Events: []
