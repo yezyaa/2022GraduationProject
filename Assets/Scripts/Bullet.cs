@@ -10,7 +10,11 @@ public class Bullet : MonoBehaviour
     {
         if (collision.gameObject.tag == "Floor")
         {
-            Destroy(gameObject, 2f); // 2檬 第 昏力
+            Destroy(gameObject, 4f); // 2檬 第 昏力
+        }
+        else if (collision.gameObject.tag == "Wall")
+        {
+            Destroy(gameObject);
         }
         else if (collision.gameObject.tag == "Enemy")
         {

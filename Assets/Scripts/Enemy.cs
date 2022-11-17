@@ -3,17 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using TMPro;
+using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
-    public enum EnemyType { Slime, Turtle, Bomb, Boss };
-    public EnemyType enemyType;
     public enum CurrentState { Idle, Trace, Attack, Dead };
     public CurrentState curState = CurrentState.Idle;
 
     public float enemyHp;
     public float enemyDamage;
-    
+
     public float traceDist; // 추적 사정거리
     public float attackDist; // 공격 사정거리
 
@@ -28,6 +27,7 @@ public class Enemy : MonoBehaviour
     public GameObject damageTextPrefab;
     public Transform enemyPos;
     WaitForSeconds wait;
+    public GameManager manager;
 
     void Awake()
     {
@@ -112,10 +112,10 @@ public class Enemy : MonoBehaviour
         rigid.angularVelocity = Vector3.zero; // 충돌 시 회전 안하게 막는 기능
     }
 
-    /*public Animator GetAnimator()
+    public Animator GetAnimator()
     {
         return animator;
-    }*/
+    }
 
     void OnTriggerEnter(Collider other)
     {
@@ -129,10 +129,18 @@ public class Enemy : MonoBehaviour
             damageText.transform.position = enemyPos.position;
             damageText.transform.SetParent(HpCanvas.transform); // canvas안에 프리팹 생성되게 함
             damageText.GetComponentInChildren<TextMeshProUGUI>().text = bullet.bulletDamage.ToString();
-            //Debug.Log("몬스터 체력 : " + enemyHp);
 
-            if (enemyHp <= 0)
+            if (enemyHp == 0 && this.tag == "EnemySlime")
             {
+                manager.slimeMaxCount--;
+                animator.SetTrigger("doDie");
+                Destroy(gameObject, 3);
+                gameObject.layer = 11;
+            }
+            
+            else if (enemyHp == 0 && this.tag == "EnemyTurtle")
+            {
+                manager.turtleMaxCount--;
                 animator.SetTrigger("doDie");
                 Destroy(gameObject, 3);
                 gameObject.layer = 11;

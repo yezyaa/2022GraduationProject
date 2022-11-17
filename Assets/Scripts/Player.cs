@@ -105,7 +105,7 @@ public class Player : MonoBehaviour
         {
             weapon.WeaponUse();
             animator.SetTrigger("doAttack");
-            Destroy(weapon.intantBullet, 2f); // 2檬 第 昏力
+            //Destroy(weapon.intantBullet, 2f); // 2檬 第 昏力
         }
     }
 
@@ -140,7 +140,7 @@ public class Player : MonoBehaviour
         {
             isJump = false;
         }
-        if (collision.gameObject.tag == "Enemy") // && enemy.GetAnimator().GetBool("isAttack")
+        if (collision.gameObject.tag == "EnemySlime" || collision.gameObject.tag == "EnemyTurtle") // && enemy.GetAnimator().GetBool("isAttack")
         {
             if (!isDamage)
             {
@@ -157,7 +157,7 @@ public class Player : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Enemy")
+        if (other.tag == "EnemyAlien")
         {
             if (!isDamage)
             {

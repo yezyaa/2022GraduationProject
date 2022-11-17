@@ -7,6 +7,12 @@ TagManager:
   - Bullet
   - Enemy
   - Floor
+  - PlayerEyes
+  - Npc
+  - Wall
+  - EnemySlime
+  - EnemyTurtle
+  - EnemyAlien
   layers:
   - Default
   - TransparentFX
