@@ -8,6 +8,7 @@ public class MovingEnemyZ : MonoBehaviour
     [SerializeField] float alienSpeed; // 이동 속도
 
     Vector3 enemyPos; // 현재위치
+    public Enemy enemy;
 
     void Start()
     {
@@ -16,12 +17,18 @@ public class MovingEnemyZ : MonoBehaviour
 
     void Update()
     {
-        Move();
+        if (enemy.curState == CurrentState.Idle)
+        {
+            Move();
+        }
     }
 
     void Move()
     {
-        Vector3 vec = enemyPos;
+        Vector3 vec;
+        vec.x = transform.position.x;
+        vec.y = transform.position.y;
+        vec.z = enemyPos.z;
         vec.z += delta * Mathf.Sin(Time.time * alienSpeed);
         transform.position = vec;
     }

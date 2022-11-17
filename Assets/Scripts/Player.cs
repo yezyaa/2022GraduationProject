@@ -140,7 +140,9 @@ public class Player : MonoBehaviour
         {
             isJump = false;
         }
-        if (collision.gameObject.tag == "EnemySlime" || collision.gameObject.tag == "EnemyTurtle") // && enemy.GetAnimator().GetBool("isAttack")
+        if (collision.gameObject.tag == "EnemySlime" ||
+            collision.gameObject.tag == "EnemyTurtle" ||
+            collision.gameObject.tag == "EnemyBomb") // && enemy.GetAnimator().GetBool("isAttack")
         {
             if (!isDamage)
             {

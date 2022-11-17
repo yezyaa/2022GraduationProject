@@ -4,10 +4,10 @@ using UnityEngine;
 using UnityEngine.AI;
 using TMPro;
 using UnityEngine.UI;
+public enum CurrentState { Idle, Trace, Attack, Dead };
 
 public class Enemy : MonoBehaviour
 {
-    public enum CurrentState { Idle, Trace, Attack, Dead };
     public CurrentState curState = CurrentState.Idle;
 
     public float enemyHp;
@@ -143,6 +143,12 @@ public class Enemy : MonoBehaviour
                 manager.turtleMaxCount--;
                 animator.SetTrigger("doDie");
                 Destroy(gameObject, 3);
+                gameObject.layer = 11;
+            }
+            else if (enemyHp < 0 && this.tag == "EnemyBomb")
+            {
+                animator.SetBool("doDie", true);
+                Destroy(gameObject, 2);
                 gameObject.layer = 11;
             }
         }
