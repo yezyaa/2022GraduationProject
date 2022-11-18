@@ -168,7 +168,7 @@ MonoBehaviour:
   curState: 0
   enemyHp: 45
   enemyDamage: 30
-  traceDist: 5
+  traceDist: 50
   attackDist: 3
   animator: {fileID: 0}
   HpCanvas: {fileID: 8564437426705414619}

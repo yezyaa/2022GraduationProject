@@ -14,6 +14,9 @@ TagManager:
   - EnemyTurtle
   - EnemyAlien
   - EnemyBomb
+  - Boss
+  - EnemyBoss
+  - Ray
   layers:
   - Default
   - TransparentFX
