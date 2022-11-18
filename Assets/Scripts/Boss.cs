@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Boss : MonoBehaviour
 {
@@ -151,16 +152,17 @@ public class Boss : MonoBehaviour
             animator.SetTrigger("doGetHit");
             enemyHp -= bullet.bulletDamage;
 
-            GameObject damageText = Instantiate(damageTextPrefab);
+            /*GameObject damageText = Instantiate(damageTextPrefab);
             damageText.transform.position = enemyPos.position;
             damageText.transform.SetParent(HpCanvas.transform); // canvas안에 프리팹 생성되게 함
-            damageText.GetComponentInChildren<TextMeshProUGUI>().text = bullet.bulletDamage.ToString();
+            damageText.GetComponentInChildren<TextMeshProUGUI>().text = bullet.bulletDamage.ToString();*/
 
             if (enemyHp < 0 && this.tag == "Boss")
             {
                 animator.SetBool("doDie", true);
-                Destroy(gameObject, 2);
+                Destroy(gameObject, 5);
                 gameObject.layer = 11;
+                SceneManager.LoadScene("End");
             }
         }
     }
