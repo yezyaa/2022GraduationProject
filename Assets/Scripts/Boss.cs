@@ -8,6 +8,11 @@ using UnityEngine.SceneManagement;
 
 public class Boss : MonoBehaviour
 {
+    public UnityEngine.UI.Image fade;
+
+    float fades = 1.0f;
+    float time = 0;
+
     public enum CurrentState { Idle, Trace, Attack, Dead };
     public CurrentState curState = CurrentState.Idle;
 
@@ -48,6 +53,21 @@ public class Boss : MonoBehaviour
         nvAgent.destination = playerTransform.position; // 추적 대상의 위치를 설정하면 바로 추적 시작
         StartCoroutine(CheckState());
         StartCoroutine(CheckStateForAction());
+    }
+
+    void Update()
+    {
+        time += Time.deltaTime;
+        if (fades > 0.0f && time >= 0.1f)
+        {
+            fades -= 0.1f;
+            fade.color = new Color(0, 0, 0, fades);
+            time = 0;
+        }
+        else if (fades <= 0.0f)
+        {
+            time = 0;
+        }
     }
 
     void FixedUpdate()
@@ -160,9 +180,10 @@ public class Boss : MonoBehaviour
             if (enemyHp < 0 && this.tag == "Boss")
             {
                 animator.SetBool("doDie", true);
-                Destroy(gameObject, 5);
+                Destroy(gameObject, 1);
                 gameObject.layer = 11;
                 SceneManager.LoadScene("End");
+                time = 0;
             }
         }
     }

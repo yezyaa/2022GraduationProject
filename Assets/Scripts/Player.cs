@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -28,6 +29,9 @@ public class Player : MonoBehaviour
     Enemy enemy;
     EnemyAlien enemyAlien;
 
+    public AudioClip audioAttack;
+    AudioSource audioSource;
+
     void Awake()
     {
         rigid = GetComponent<Rigidbody>();
@@ -35,6 +39,7 @@ public class Player : MonoBehaviour
         weapon = GetComponentInChildren<Weapon>();
         enemy = GameObject.FindWithTag("Enemy").GetComponent<Enemy>();
         enemyAlien = GetComponent<EnemyAlien>();
+        this.audioSource = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -106,6 +111,8 @@ public class Player : MonoBehaviour
             weapon.WeaponUse();
             animator.SetTrigger("doAttack");
             //Destroy(weapon.intantBullet, 2f); // 2초 뒤 삭제
+            audioSource.clip = audioAttack;
+            audioSource.Play();
         }
     }
 

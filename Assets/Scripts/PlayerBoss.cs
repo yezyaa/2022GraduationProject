@@ -28,6 +28,9 @@ public class PlayerBoss : MonoBehaviour
     Boss boss;
     EnemyAlien enemyAlien;
 
+    public AudioClip audioAttack;
+    AudioSource audioSource;
+
     void Awake()
     {
         rigid = GetComponent<Rigidbody>();
@@ -35,6 +38,7 @@ public class PlayerBoss : MonoBehaviour
         weapon = GetComponentInChildren<Weapon>();
         boss = GameObject.FindWithTag("Enemy").GetComponent<Boss>();
         enemyAlien = GetComponent<EnemyAlien>();
+        this.audioSource = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -106,6 +110,8 @@ public class PlayerBoss : MonoBehaviour
             weapon.WeaponUse();
             animator.SetTrigger("doAttack");
             //Destroy(weapon.intantBullet, 2f); // 2초 뒤 삭제
+            audioSource.clip = audioAttack;
+            audioSource.Play();
         }
     }
 

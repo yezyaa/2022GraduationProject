@@ -134,7 +134,7 @@ public class Enemy : MonoBehaviour
             {
                 manager.slimeMaxCount--;
                 animator.SetTrigger("doDie");
-                Destroy(gameObject, 3);
+                Destroy(gameObject, 1);
                 gameObject.layer = 11;
             }
             
@@ -142,7 +142,7 @@ public class Enemy : MonoBehaviour
             {
                 manager.turtleMaxCount--;
                 animator.SetTrigger("doDie");
-                Destroy(gameObject, 3);
+                Destroy(gameObject, 1);
                 gameObject.layer = 11;
             }
             else if (enemyHp < 0 && this.tag == "EnemyBomb")
